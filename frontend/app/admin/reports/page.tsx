@@ -1,9 +1,9 @@
 "use client"
 
-import { ProtectedRoute } from "../../components/protected-route"
-import { Navbar } from "../../components/navbar"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
-import { Button } from "../../components/ui/button"
+import { ProtectedRoute } from "../../../components/protected-route"
+import { Navbar } from "../../../components/navbar"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card"
+import { Button } from "../../../components/ui/button"
 import { BarChart3, TrendingUp, Users, FileText, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 

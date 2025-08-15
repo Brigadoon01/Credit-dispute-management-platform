@@ -11,13 +11,13 @@ export class MockCreditProviderService {
     const accountCount = 3 + (userId % 8) // 3-10 accounts
 
     return {
-      credit_score: baseScore,
+      credit_score: Math.floor(baseScore),
       report_date: new Date().toISOString().split("T")[0],
       total_accounts: accountCount,
       open_accounts: Math.floor(accountCount * 0.7),
-      total_balance: (userId * 1000 + 5000) % 50000,
-      payment_history_score: Math.min(100, baseScore / 8),
-      credit_utilization: (userId * 5) % 60,
+      total_balance: Math.floor((userId * 1000 + 5000) % 50000),
+      payment_history_score: Math.floor(Math.min(100, baseScore / 8)),
+      credit_utilization: Math.floor((userId * 5) % 60),
       length_of_history_months: 24 + ((userId * 3) % 120),
       credit_items: this.generateMockCreditItems(userId, accountCount),
     }
@@ -49,7 +49,7 @@ export class MockCreditProviderService {
         account_name: isCollection ? `${accountNames[6]} #${userId}${i}` : accountNames[i % accountNames.length],
         account_type: accountType,
         account_status: isCollection ? "Open" : statuses[i % statuses.length],
-        balance: isCollection ? (userId * 100 + i * 50) % 2000 : (userId * 500 + i * 1000) % 25000,
+        balance: Math.floor(isCollection ? (userId * 100 + i * 50) % 2000 : (userId * 500 + i * 1000) % 25000),
         payment_status: isCollection ? "Collection" : paymentStatuses[i % paymentStatuses.length],
         date_opened: this.generateRandomDate(2018, 2023),
         last_activity: this.generateRandomDate(2023, 2024),

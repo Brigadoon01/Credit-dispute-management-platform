@@ -41,11 +41,19 @@ export class DisputesController {
       throw new UnauthorizedException("User not authenticated")
     }
     
-    const dispute = await this.disputesService.getDisputeById(Number(id))
-    if (req.user.role !== "admin" && dispute.user_id !== req.user.id) {
-      throw new UnauthorizedException("Unauthorized access to dispute")
+    try {
+      const dispute = await this.disputesService.getDisputeById(Number(id))
+      if (req.user.role !== "admin" && dispute.user_id !== req.user.id) {
+        throw new UnauthorizedException("Unauthorized access to dispute")
+      }
+      return dispute
+    } catch (error) {
+      console.error('Error fetching dispute:', error)
+      if (error.message === "Dispute not found") {
+        throw new UnauthorizedException("Dispute not found")
+      }
+      throw error
     }
-    return dispute
   }
 
   @Put(":id/status")
@@ -58,5 +66,23 @@ export class DisputesController {
   @Roles("admin")
   async getDisputeStats() {
     return this.disputesService.getDisputeStats()
+  }
+
+  @Get("admin/all-with-items")
+  @Roles("admin")
+  async getAllDisputesWithItems() {
+    return this.disputesService.getAllDisputesWithItems()
+  }
+
+  @Get("test/connection")
+  @Roles("admin")
+  async testConnection() {
+    try {
+      const result = await this.disputesService.testConnection()
+      return { message: "Database connection successful", data: result }
+    } catch (error) {
+      console.error('Database connection test failed:', error)
+      return { message: "Database connection failed", error: error.message }
+    }
   }
 }

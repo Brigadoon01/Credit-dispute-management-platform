@@ -60,10 +60,10 @@ export default function AdminDisputeDetailPage() {
       setNewStatus(disputeData.status)
       setAdminNotes(disputeData.admin_notes || "")
       setResolutionNotes(disputeData.resolution_notes || "")
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to load dispute details",
+        description: error.response?.data?.message || "Failed to load dispute details",
         variant: "destructive",
       })
     } finally {

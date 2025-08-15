@@ -39,6 +39,7 @@ export class CreditProfileService {
   async refreshCreditData(userId: number) {
     // Simulate fetching fresh data from credit provider
     const mockData = await this.mockCreditProvider.fetchCreditData(userId)
+    console.log('Refreshing credit data with:', mockData)
 
     // Update existing credit profile
     const updateResult = await this.databaseService.query(
@@ -64,6 +65,7 @@ export class CreditProfileService {
   }
 
   private async createCreditProfile(userId: number, mockData: any) {
+    console.log('Creating credit profile with data:', mockData)
     const result = await this.databaseService.query(
       `INSERT INTO credit_profiles 
        (user_id, credit_score, report_date, total_accounts, open_accounts, 

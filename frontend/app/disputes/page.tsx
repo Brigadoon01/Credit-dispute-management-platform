@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { ProtectedRoute } from "../../components/protected-route"
 import { Navbar } from "../../components/navbar"
 import { useAuth } from "../../lib/auth-context"
@@ -34,6 +35,7 @@ interface Dispute {
 export default function DisputesPage() {
   const { user } = useAuth()
   const { toast } = useToast()
+  const router = useRouter()
   const [disputes, setDisputes] = useState<Dispute[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
@@ -46,10 +48,10 @@ export default function DisputesPage() {
     try {
       const response = await apiService.get("/disputes/history")
       setDisputes(response.data)
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to load disputes",
+        description: error.response?.data?.message || "Failed to load disputes",
         variant: "destructive",
       })
     } finally {
@@ -224,7 +226,7 @@ export default function DisputesPage() {
                                 size="sm"
                                 variant="outline"
                                 onClick={() => {
-                                  window.location.href = `/admin/disputes/${dispute.id}`
+                                  router.push(`/admin/disputes/${dispute.id}`)
                                 }}
                               >
                                 Review

@@ -60,7 +60,7 @@ export class DisputesService {
   async getDisputeById(id: number) {
     const result = await this.databaseService.query(
       `SELECT d.*, cri.account_name, cri.account_type, cri.balance, cri.payment_status,
-              u.first_name, u.last_name, u.email
+              u.first_name, u.last_name, u.email, u.id as user_id
        FROM disputes d
        JOIN credit_report_items cri ON d.credit_report_item_id = cri.id
        JOIN users u ON d.user_id = u.id
@@ -138,6 +138,54 @@ export class DisputesService {
       total: Number.parseInt(totalResult.rows[0].total),
       recent: Number.parseInt(recentResult.rows[0].recent),
       by_status: statusCounts,
+    }
+  }
+
+  async getAllDisputesWithItems() {
+    const result = await this.databaseService.query(`
+      SELECT 
+        d.*,
+        cri.account_name, 
+        cri.account_type, 
+        cri.balance, 
+        cri.payment_status,
+        cri.date_opened,
+        cri.last_activity,
+        u.first_name, 
+        u.last_name, 
+        u.email,
+        cp.credit_score,
+        cp.credit_utilization
+      FROM disputes d
+      JOIN credit_report_items cri ON d.credit_report_item_id = cri.id
+      JOIN users u ON d.user_id = u.id
+      JOIN credit_profiles cp ON u.id = cp.user_id
+      ORDER BY d.created_at DESC
+    `)
+    
+    return result.rows
+  }
+
+  async testConnection() {
+    // Test basic database connection
+    const result = await this.databaseService.query("SELECT 1 as test")
+    
+    // Test if disputes table exists
+    const tableResult = await this.databaseService.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'disputes'
+      ) as table_exists
+    `)
+    
+    // Test if there are any disputes
+    const countResult = await this.databaseService.query("SELECT COUNT(*) as count FROM disputes")
+    
+    return {
+      connection: result.rows[0],
+      tableExists: tableResult.rows[0].table_exists,
+      disputeCount: countResult.rows[0].count
     }
   }
 }

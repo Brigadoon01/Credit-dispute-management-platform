@@ -92,7 +92,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="mt-4 p-4 bg-muted rounded-lg">
+          {/* <div className="mt-4 p-4 bg-muted rounded-lg">
             <p className="text-sm font-medium mb-2">Demo Accounts:</p>
             <div className="text-xs space-y-1">
               <p>
@@ -102,7 +102,7 @@ export default function LoginPage() {
                 <strong>Admin:</strong> admin@example.com / password123
               </p>
             </div>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>
